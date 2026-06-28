@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Aerospace Engineering — A Free Self-Study Codex</title>
+<meta name="description" content="A complete, free, self-directed aerospace engineering curriculum — from algebra to orbital mechanics. 100% free resources.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Spectral:ital,wght@0,300;0,400;0,500;0,600;1,400&family=Space+Grotesk:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  ::-webkit-scrollbar { display: none; }
+  body { -ms-overflow-style: none; scrollbar-width: none; }
+  @keyframes cm-rise { from { opacity:0; transform:translateY(22px); } to { opacity:1; transform:none; } }
+
+  .page { position:relative; min-height:100vh; background:#05060f; font-family:'Spectral',Georgia,serif; color:#b3bcd4; overflow:hidden; }
+  .bg-glow { position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:radial-gradient(120% 80% at 50% -10%, rgba(58,46,98,0.45), transparent 55%),radial-gradient(90% 70% at 85% 110%, rgba(20,58,74,0.35), transparent 60%),radial-gradient(70% 60% at 10% 90%, rgba(74,40,52,0.28), transparent 60%); }
+  #starCanvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+  .bg-fade { position:fixed; inset:0; z-index:1; pointer-events:none; background:linear-gradient(180deg, rgba(5,6,15,0) 60%, rgba(5,6,15,0.85) 100%); }
+  .layer { position:relative; z-index:2; }
+
+  /* header */
+  .header { padding:64px 40px 36px; border-bottom:1px solid rgba(227,194,126,0.14); }
+  .eyebrow { font-family:'Space Grotesk',sans-serif; font-size:12px; letter-spacing:6px; color:#e3c27e; margin-bottom:22px; text-transform:uppercase; }
+  .h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(46px,9vw,104px); font-weight:500; line-height:0.98; letter-spacing:-1px; color:#f6efda; margin-bottom:24px; }
+  .h1 .it { font-style:italic; color:#e3c27e; }
+  .lede { font-family:'Spectral',serif; font-size:18px; font-weight:300; color:#9aa4be; max-width:560px; line-height:1.78; }
+  .stats { display:flex; gap:44px; margin-top:34px; flex-wrap:wrap; }
+  .stat-v { font-family:'Cormorant Garamond',serif; font-size:30px; font-weight:600; color:#e3c27e; line-height:1; }
+  .stat-l { font-family:'Space Grotesk',sans-serif; font-size:10px; letter-spacing:2px; color:#7e88a6; text-transform:uppercase; margin-top:6px; }
+
+  /* roadmap */
+  .roadmap { padding:32px 40px 4px; display:flex; align-items:center; overflow-x:auto; }
+  .rnode { display:flex; align-items:center; }
+  .rdot { width:30px; height:30px; border-radius:50%; display:flex; align-items:center; justify-content:center;
+    font-family:'Cormorant Garamond',serif; font-size:14px; font-weight:600; flex-shrink:0; cursor:pointer; transition:all .25s; }
+  .rline { width:30px; height:1px; flex-shrink:0; }
+
+  /* nav */
+  .pnav { display:flex; gap:10px; padding:20px 40px 26px; overflow-x:auto; border-bottom:1px solid rgba(227,194,126,0.14); }
+  .pbtn { flex-shrink:0; padding:12px 18px; border-radius:4px; backdrop-filter:blur(3px); cursor:pointer; text-align:left; transition:all .2s; }
+  .pbtn:hover { border-color:rgba(227,194,126,0.4) !important; }
+  .pbtn-code { font-family:'Space Grotesk',sans-serif; font-size:10px; letter-spacing:2px; text-transform:uppercase; margin-bottom:6px; }
+  .pbtn-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; white-space:nowrap; }
+
+  /* phase body */
+  .main { padding:56px 40px; max-width:1000px; margin:0 auto; animation:cm-rise .5s ease both; }
+  .ph-top { display:flex; align-items:flex-start; justify-content:space-between; margin-bottom:42px; gap:24px; flex-wrap:wrap; }
+  .ph-code { font-family:'Space Grotesk',sans-serif; font-size:13px; letter-spacing:5px; text-transform:uppercase; margin-bottom:18px; }
+  .ph-divbar { height:1px; width:60px; margin-bottom:24px; }
+  .ph-title { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,6vw,60px); font-weight:500; color:#f6efda; line-height:1.04; margin-bottom:12px; }
+  .ph-sub { font-family:'Cormorant Garamond',serif; font-style:italic; font-size:clamp(20px,3vw,26px); font-weight:400; color:#aab4ce; line-height:1.4; }
+  .ph-badges { display:flex; gap:10px; flex-wrap:wrap; padding-top:6px; }
+  .badge { font-family:'Space Grotesk',sans-serif; font-size:9.5px; letter-spacing:2px; text-transform:uppercase; border-radius:20px; padding:5px 13px; white-space:nowrap; }
+
+  /* topic cards */
+  .tcard { border-radius:4px; margin-bottom:14px; overflow:hidden; backdrop-filter:blur(3px); transition:all .25s; }
+  .thead { display:flex; align-items:center; justify-content:space-between; padding:20px 26px; cursor:pointer; gap:16px; }
+  .tname { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:600; flex:1; line-height:1.2; }
+  .thrs { font-family:'Space Grotesk',sans-serif; font-size:10px; letter-spacing:1px; color:#7e88a6; white-space:nowrap; text-transform:uppercase; }
+  .tchev { font-family:'Cormorant Garamond',serif; font-size:16px; transition:transform .25s; }
+  .tbody { padding:0 26px 26px; }
+  .slabel { font-family:'Space Grotesk',sans-serif; font-size:10px; letter-spacing:3px; color:#7e88a6; margin-bottom:14px; text-transform:uppercase; }
+  .slist { list-style:none; margin-bottom:26px; }
+  .sitem { padding:8px 0; font-family:'Spectral',serif; font-size:16px; line-height:1.7; color:#b3bcd4; display:flex; align-items:flex-start; gap:12px; border-bottom:1px solid rgba(227,194,126,0.07); }
+  .sitem .arr { color:#e3c27e; flex-shrink:0; font-family:'Cormorant Garamond',serif; }
+  .rcol { display:flex; flex-direction:column; gap:9px; }
+  .rlink { display:flex; align-items:center; gap:14px; padding:12px 16px; border-radius:4px; background:rgba(10,13,28,0.45); border:1px solid rgba(227,194,126,0.1); text-decoration:none; transition:all .18s; }
+  .rlink:hover { border-color:rgba(227,194,126,0.3); background:rgba(12,16,33,0.7); }
+  .rtag { font-family:'Space Grotesk',sans-serif; font-size:9.5px; letter-spacing:1.5px; text-transform:uppercase; flex-shrink:0; font-weight:500; border-radius:20px; padding:3px 11px; white-space:nowrap; }
+  .rname { font-family:'Spectral',serif; font-size:15.5px; color:#dfe6f5; flex:1; line-height:1.5; }
+  .rarr { font-family:'Cormorant Garamond',serif; font-size:16px; color:#5a6684; }
+
+  /* tools */
+  .tools { padding:64px 40px; border-top:1px solid rgba(227,194,126,0.14); background:rgba(10,13,28,0.4); backdrop-filter:blur(3px); }
+  .tools-inner { max-width:1000px; margin:0 auto; }
+  .tools-eyebrow { font-family:'Space Grotesk',sans-serif; font-size:12px; letter-spacing:5px; color:#e3c27e; text-transform:uppercase; margin-bottom:14px; }
+  .tools-h { font-family:'Cormorant Garamond',serif; font-size:34px; font-weight:500; color:#f6efda; margin-bottom:8px; }
+  .tools-p { font-family:'Spectral',serif; font-size:16px; font-weight:300; color:#9aa4be; margin-bottom:32px; max-width:560px; line-height:1.7; }
+  .tgrid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:14px; }
+  .tool { padding:20px; border-radius:4px; border:1px solid rgba(227,194,126,0.16); background:rgba(12,16,33,0.55); backdrop-filter:blur(3px); text-decoration:none; display:block; transition:all .2s; }
+  .tool:hover { border-color:rgba(227,194,126,0.45); background:rgba(12,16,33,0.75); }
+  .tool-n { font-family:'Cormorant Garamond',serif; font-size:21px; font-weight:600; color:#f3edda; margin-bottom:6px; }
+  .tool-d { font-family:'Spectral',serif; font-size:14px; font-weight:300; color:#9aa4be; line-height:1.5; }
+
+  .foot { padding:40px; text-align:center; font-family:'Space Grotesk',sans-serif; font-size:10px; letter-spacing:2px; color:#5a6684; text-transform:uppercase; }
+</style>
+</head>
+<body>
+<div class="page">
+  <div class="bg-glow"></div>
+  <canvas id="starCanvas"></canvas>
+  <div class="bg-fade"></div>
+
+  <div class="layer">
+    <!-- HEADER -->
+    <div class="header">
+      <div class="eyebrow">Self-Directed Mission Briefing — Zero to Aerospace Engineer</div>
+      <h1 class="h1">Aerospace<br><span class="it">Engineering</span></h1>
+      <p class="lede">A complete curriculum from algebra to orbital mechanics — charted as a celestial codex. One hundred percent free resources. No tuition. No prerequisites beyond curiosity.</p>
+      <div class="stats" id="stats"></div>
+    </div>
+
+    <!-- ROADMAP -->
+    <div class="roadmap" id="roadmap"></div>
+
+    <!-- PHASE NAV -->
+    <div class="pnav" id="pnav"></div>
+
+    <!-- PHASE BODY -->
+    <div id="phaseBody"></div>
+
+    <!-- TOOLS -->
+    <div class="tools">
+      <div class="tools-inner">
+        <div class="tools-eyebrow">The Instruments</div>
+        <h3 class="tools-h">Free Software Toolkit</h3>
+        <p class="tools-p">Professional-grade tools used by working aerospace engineers — every one free to download and learn.</p>
+        <div class="tgrid" id="tgrid"></div>
+      </div>
+    </div>
+
+    <div class="foot">Charted with care · 100% free &amp; open resources</div>
+  </div>
+</div>
+
+<script>
+/* ============================ DATA ============================ */
+const STATS = [["7","Study Phases"],["24–36","Months (est.)"],["2,000+","Study Hours"],["100%","Free Resources"],["8+","Free Tools"]];
+
+const TYPE_CLR = {
+  Course:"#e3c27e", Video:"#b884cf", Interactive:"#5fa8a2",
+  Notes:"#d98a5b", Textbook:"#9a6cff", Reference:"#6fb1d6",
+  Tool:"#8fb6d6", Community:"#b6964e",
+};
+
+const FREE_TOOLS = [
+  {n:"XFOIL",d:"Airfoil analysis (MIT)",url:"https://web.mit.edu/drela/Public/web/xfoil/"},
+  {n:"OpenVSP",d:"3D aircraft geometry (NASA)",url:"https://openvsp.org/"},
+  {n:"GMAT",d:"Orbital mission design (NASA)",url:"https://gmat.gsfc.nasa.gov/"},
+  {n:"OpenFOAM",d:"Computational fluid dynamics",url:"https://www.openfoam.com/"},
+  {n:"GNU Octave",d:"Free MATLAB alternative",url:"https://octave.org/"},
+  {n:"Python / SciPy",d:"Engineering computation",url:"https://scipy.org/"},
+  {n:"FreeCAD",d:"Free 3D parametric modeler",url:"https://www.freecad.org/"},
+  {n:"RPA (free ed.)",d:"Rocket propulsion analysis",url:"http://www.propulsion-analysis.com/"},
+];
+
+const PHASES = [
+  { code:"PHASE 00", title:"Mathematical Prerequisites", subtitle:"The launchpad — build your computational language",
+    duration:"2–3 months", level:"Beginner", color:"#6fb1d6", icon:"\u2211\uFE0E",
+    topics:[
+      { name:"Algebra & Pre-Calculus", hrs:"80–100 hrs",
+        subs:["Functions, equations & inequalities","Polynomials & rational functions","Logarithms & exponentials","Complex numbers basics","Sequences & series"],
+        res:[{n:"Khan Academy — Algebra I & II",url:"https://www.khanacademy.org/math/algebra",t:"Interactive"},{n:"Khan Academy — Pre-Calculus",url:"https://www.khanacademy.org/math/precalculus",t:"Interactive"},{n:"Paul's Online Math Notes (free, thorough)",url:"https://tutorial.math.lamar.edu/",t:"Notes"}]},
+      { name:"Trigonometry & Vectors", hrs:"40–60 hrs",
+        subs:["Unit circle & radian measure","Trig functions, identities & inverses","Laws of Sines & Cosines","Vector operations (dot product, cross product)"],
+        res:[{n:"Khan Academy — Trigonometry",url:"https://www.khanacademy.org/math/trigonometry",t:"Interactive"},{n:"3Blue1Brown — Lockdown Math (YouTube)",url:"https://www.youtube.com/playlist?list=PLZHQObOWTQDP5CVelJJ1bNDouqrAhVPev",t:"Video"}]},
+    ]},
+  { code:"PHASE 01", title:"Advanced Mathematics", subtitle:"The true language of aerospace",
+    duration:"4–6 months", level:"Foundational", color:"#9a6cff", icon:"\u222B\uFE0E",
+    topics:[
+      { name:"Single Variable Calculus", hrs:"100–120 hrs",
+        subs:["Limits & continuity","Derivatives (all rules incl. chain rule)","Integrals & fundamental theorem","Integration techniques (substitution, parts, partial fractions)","Applications: optimization, area, arc length"],
+        res:[{n:"MIT OCW 18.01 — Single Variable Calculus",url:"https://ocw.mit.edu/courses/18-01-single-variable-calculus-fall-2006/",t:"Course"},{n:"3Blue1Brown — Essence of Calculus (YouTube)",url:"https://www.youtube.com/playlist?list=PLZHQObOWTQDMsr9K-rj53DwVRMYO3t5Yr",t:"Video"},{n:"Paul's Calculus I Notes",url:"https://tutorial.math.lamar.edu/Classes/CalcI/CalcI.aspx",t:"Notes"}]},
+      { name:"Multivariable Calculus", hrs:"80–100 hrs",
+        subs:["Partial derivatives","Multiple integrals (double & triple)","Vector fields & line integrals","Gradient, divergence & curl","Stokes' theorem & Divergence theorem"],
+        res:[{n:"MIT OCW 18.02 — Multivariable Calculus",url:"https://ocw.mit.edu/courses/18-02-multivariable-calculus-fall-2007/",t:"Course"},{n:"3Blue1Brown — Multivariable Calculus Previews",url:"https://www.youtube.com/watch?v=TrcCbdWwCBc",t:"Video"}]},
+      { name:"Linear Algebra", hrs:"60–80 hrs",
+        subs:["Vectors, matrices, determinants","Solving systems of equations","Eigenvalues & eigenvectors","Linear transformations","Applications: rotations, coordinate frames"],
+        res:[{n:"MIT OCW 18.06 — Linear Algebra (Gilbert Strang)",url:"https://ocw.mit.edu/courses/18-06-linear-algebra-spring-2010/",t:"Course"},{n:"3Blue1Brown — Essence of Linear Algebra",url:"https://www.youtube.com/playlist?list=PLZHQObOWTQDPD3MizzM2xVFitgF8hE_ab",t:"Video"}]},
+      { name:"Ordinary Differential Equations", hrs:"80–100 hrs",
+        subs:["First-order ODEs (separable, linear, exact)","Second-order linear ODEs","Laplace transforms","Systems of ODEs","Intro to PDEs (heat/wave equation)"],
+        res:[{n:"MIT OCW 18.03 — Differential Equations",url:"https://ocw.mit.edu/courses/18-03-differential-equations-spring-2010/",t:"Course"},{n:"Paul's Differential Equations Notes",url:"https://tutorial.math.lamar.edu/Classes/DE/DE.aspx",t:"Notes"}]},
+    ]},
+  { code:"PHASE 02", title:"Physics Foundations", subtitle:"Understanding nature's fundamental rules",
+    duration:"3–4 months", level:"Foundational", color:"#5fa8a2", icon:"\u269B\uFE0E",
+    topics:[
+      { name:"Classical Mechanics", hrs:"100–120 hrs",
+        subs:["Newton's three laws in depth","Work, energy & power","Momentum & collisions","Rotational motion & angular momentum","Simple harmonic motion & oscillations"],
+        res:[{n:"MIT OCW 8.01 — Classical Mechanics (Lewin)",url:"https://ocw.mit.edu/courses/8-01-physics-i-classical-mechanics-fall-1999/",t:"Course"},{n:"The Feynman Lectures on Physics — Vol. 1 (free online)",url:"https://www.feynmanlectures.caltech.edu/I_toc.html",t:"Textbook"},{n:"Khan Academy — Physics",url:"https://www.khanacademy.org/science/physics",t:"Interactive"}]},
+      { name:"Thermodynamics", hrs:"60–80 hrs",
+        subs:["Zeroth through Third laws","Ideal & real gas behavior","Heat engines & the Carnot cycle","Entropy & irreversibility","Thermodynamic potentials (G, H, A)"],
+        res:[{n:"MIT OCW 5.60 — Thermodynamics & Kinetics",url:"https://ocw.mit.edu/courses/5-60-thermodynamics-kinetics-spring-2008/",t:"Course"},{n:"Khan Academy — Thermodynamics",url:"https://www.khanacademy.org/science/physics/thermodynamics",t:"Interactive"}]},
+      { name:"Electromagnetism (Survey)", hrs:"40–60 hrs",
+        subs:["Electric fields & Gauss's law","Magnetic fields & Ampere's law","Maxwell's equations (conceptual)","Electromagnetic waves & spectrum","Relevance to avionics & sensors"],
+        res:[{n:"MIT OCW 8.02 — Electricity & Magnetism",url:"https://ocw.mit.edu/courses/8-02-electricity-and-magnetism-spring-2002/",t:"Course"},{n:"Feynman Lectures Vol. 2",url:"https://www.feynmanlectures.caltech.edu/II_toc.html",t:"Textbook"}]},
+    ]},
+  { code:"PHASE 03", title:"Engineering Core", subtitle:"Bridging physics to real engineering systems",
+    duration:"3–5 months", level:"Intermediate", color:"#d98a5b", icon:"\u2699\uFE0E",
+    topics:[
+      { name:"Statics", hrs:"60–80 hrs",
+        subs:["Free body diagrams","Equilibrium of particles & rigid bodies","Trusses, frames & machines","Centroids & moments of inertia","Distributed loads & supports"],
+        res:[{n:"Engineering Statics — Free Interactive Textbook",url:"https://engineeringstatics.org/",t:"Textbook"},{n:"NPTEL — Engineering Mechanics (Statics)",url:"https://nptel.ac.in/courses/112104193",t:"Course"},{n:"MIT OCW 2.001 — Mechanics & Materials I",url:"https://ocw.mit.edu/courses/2-001-mechanics-materials-i-fall-2006/",t:"Course"}]},
+      { name:"Dynamics", hrs:"60–80 hrs",
+        subs:["Kinematics of particles & rigid bodies","Newton-Euler equations","Work-energy methods in dynamics","Impulse-momentum","Vibrations & resonance basics"],
+        res:[{n:"MIT OCW 2.003J — Engineering Dynamics",url:"https://ocw.mit.edu/courses/2-003j-dynamics-and-control-i-spring-2007/",t:"Course"},{n:"NPTEL — Engineering Dynamics",url:"https://nptel.ac.in/courses/112104118",t:"Course"}]},
+      { name:"Mechanics of Materials", hrs:"60–80 hrs",
+        subs:["Stress, strain & Hooke's law","Axial loading, bending & shear","Torsion of shafts","Beam deflection","Column buckling (Euler's formula)"],
+        res:[{n:"MIT OCW 2.002 — Mechanics & Materials II",url:"https://ocw.mit.edu/courses/2-002-mechanics-and-materials-ii-spring-2004/",t:"Course"},{n:"NPTEL — Strength of Materials",url:"https://nptel.ac.in/courses/112105080",t:"Course"}]},
+      { name:"Python Programming for Engineers", hrs:"60–80 hrs",
+        subs:["Python syntax, data types & control flow","NumPy arrays & matrix operations","SciPy for ODE solving, optimization, integration","Matplotlib for engineering plots","Numerical methods: root-finding, interpolation"],
+        res:[{n:"MIT OCW 6.0001 — Intro to Computer Science (Python)",url:"https://ocw.mit.edu/courses/6-0001-introduction-to-computer-science-and-programming-in-python-fall-2016/",t:"Course"},{n:"SciPy Lecture Notes (free PDF)",url:"https://scipy-lectures.org/",t:"Notes"},{n:"Python for Everybody (Coursera — audit free)",url:"https://www.coursera.org/specializations/python",t:"Course"}]},
+    ]},
+  { code:"PHASE 04", title:"Core Aerospace Engineering", subtitle:"The heart of the discipline",
+    duration:"8–12 months", level:"Intermediate–Advanced", color:"#e3c27e", icon:"\u2726",
+    topics:[
+      { name:"Fluid Mechanics", hrs:"100–120 hrs",
+        subs:["Fluid statics & hydrostatic pressure","Continuity equation","Bernoulli equation & its limits","Momentum equation (control volume analysis)","Viscosity, Reynolds number & flow regimes","Boundary layer concept","Navier-Stokes equations (qualitative)"],
+        res:[{n:"MIT OCW 16.01–16.04 — Unified Engineering (includes fluids)",url:"https://ocw.mit.edu/courses/16-01-unified-engineering-i-ii-iii-iv-fall-2005-spring-2006/",t:"Course"},{n:"NPTEL — Fluid Mechanics",url:"https://nptel.ac.in/courses/112104118",t:"Course"},{n:"NASA Beginner's Guide to Aeronautics",url:"https://www.grc.nasa.gov/www/k-12/airplane/",t:"Reference"}]},
+      { name:"Aerodynamics", hrs:"120–150 hrs",
+        subs:["Lift & drag fundamentals","Airfoil geometry & pressure distribution","Thin Airfoil Theory","Finite wing theory & induced drag","Compressible flow basics","Transonic & supersonic aerodynamics","Mach number & shock waves","Boundary layer transition & separation"],
+        res:[{n:"MIT OCW 16.100 — Aerodynamics",url:"https://ocw.mit.edu/courses/16-100-aerodynamics-fall-2005/",t:"Course"},{n:"NPTEL — Introduction to Aerodynamics",url:"https://nptel.ac.in/courses/101104006",t:"Course"},{n:"XFOIL (MIT) — Free airfoil analysis tool",url:"https://web.mit.edu/drela/Public/web/xfoil/",t:"Tool"},{n:"NASA FOILSIM — Airfoil simulator (browser-based)",url:"https://www.grc.nasa.gov/www/k-12/airplane/foil3.html",t:"Tool"}]},
+      { name:"Aircraft Propulsion", hrs:"100–120 hrs",
+        subs:["Brayton thermodynamic cycle","Turbojet, turbofan & turboprop engines","Compressors, combustors & turbines","Thrust & specific fuel consumption","Rocket propulsion fundamentals","The rocket equation (Tsiolkovsky)","Nozzle design & area-Mach relations","Solid vs. liquid vs. hybrid rockets"],
+        res:[{n:"MIT OCW 16.50 — Intro to Propulsion Systems",url:"https://ocw.mit.edu/courses/16-50-introduction-to-propulsion-systems-spring-2012/",t:"Course"},{n:"NASA Beginner's Guide to Propulsion",url:"https://www.grc.nasa.gov/www/k-12/airplane/bgp.html",t:"Reference"},{n:"Everyday Astronaut — Engine Deep Dives (YouTube)",url:"https://www.youtube.com/@EverydayAstronaut",t:"Video"},{n:"NPTEL — Aircraft Propulsion",url:"https://nptel.ac.in/courses/101104007",t:"Course"}]},
+      { name:"Flight Mechanics & Performance", hrs:"80–100 hrs",
+        subs:["Equations of motion for an aircraft","Lift & drag polars","Steady-state cruise, climb & descent","Takeoff & landing distance","Breguet range & endurance equations","V-n diagram & structural limits","Static stability: longitudinal & lateral","Dynamic stability modes (phugoid, Dutch roll)"],
+        res:[{n:"MIT OCW 16.333 — Aircraft Stability & Control",url:"https://ocw.mit.edu/courses/16-333-aircraft-stability-and-control-fall-2004/",t:"Course"},{n:"NPTEL — Aircraft Performance",url:"https://nptel.ac.in/courses/101104005",t:"Course"}]},
+      { name:"Aerospace Structures & Materials", hrs:"80–100 hrs",
+        subs:["Aerospace aluminum alloys, titanium & steel","Carbon fiber composites (CFRP)","Fatigue, fracture mechanics & S-N curves","Thin-walled structures (monocoque, semi-monocoque)","Stress concentration factors","Aeroelasticity basics: flutter & divergence"],
+        res:[{n:"MIT OCW 16.20 — Structural Mechanics",url:"https://ocw.mit.edu/courses/16-20-structural-mechanics-spring-2013/",t:"Course"},{n:"NPTEL — Aircraft Structures",url:"https://nptel.ac.in/courses/101106040",t:"Course"},{n:"NASA Technical Standards (free library)",url:"https://standards.nasa.gov/",t:"Reference"}]},
+      { name:"Heat Transfer (Aerospace Context)", hrs:"60–80 hrs",
+        subs:["Conduction, convection & radiation","Aerodynamic heating (stagnation temperature)","Reentry vehicle thermal protection","Turbine blade cooling concepts","Thermal management of spacecraft"],
+        res:[{n:"MIT OCW 2.51 — Intermediate Heat Transfer",url:"https://ocw.mit.edu/courses/2-51-intermediate-heat-and-mass-transfer-fall-2008/",t:"Course"},{n:"NPTEL — Heat Transfer",url:"https://nptel.ac.in/courses/112101010",t:"Course"}]},
+    ]},
+  { code:"PHASE 05", title:"Advanced Aerospace", subtitle:"Orbital mechanics, control & full system design",
+    duration:"6–12 months", level:"Advanced", color:"#b884cf", icon:"\u2295\uFE0E",
+    topics:[
+      { name:"Orbital Mechanics & Astrodynamics", hrs:"120–150 hrs",
+        subs:["Two-body gravitational problem","Conic sections (ellipse, hyperbola, parabola)","Kepler's three laws","Orbital elements (6 classical)","Hohmann transfers & bi-elliptic transfers","Delta-V budgets","Ground tracks & coverage analysis","Perturbations (J2, drag, solar pressure)","Lambert's problem & interplanetary trajectories","Gravity assist maneuvers"],
+        res:[{n:"MIT OCW 16.346 — Astrodynamics",url:"https://ocw.mit.edu/courses/16-346-astrodynamics-fall-2008/",t:"Course"},{n:"Bate, Mueller & White — Fundamentals of Astrodynamics (free archive.org)",url:"https://archive.org/details/fundamentalsofas00bate",t:"Textbook"},{n:"Coursera — Spacecraft Dynamics & Control (CU Boulder — audit free)",url:"https://www.coursera.org/specializations/spacecraft-dynamics-control",t:"Course"},{n:"Scott Manley — Orbital Mechanics (YouTube)",url:"https://www.youtube.com/@scottmanley",t:"Video"},{n:"NASA GMAT — Free orbital simulation tool",url:"https://gmat.gsfc.nasa.gov/",t:"Tool"}]},
+      { name:"Guidance, Navigation & Control (GNC)", hrs:"100–120 hrs",
+        subs:["Control theory fundamentals","PID controllers in practice","Transfer functions & Laplace domain","Root locus & Bode plot methods","State-space representation","Stability analysis (poles, zeros, margins)","Attitude dynamics (Euler angles, quaternions)","Reaction wheels, thrusters, CMGs"],
+        res:[{n:"MIT OCW 16.30 — Feedback Control of Dynamic Systems",url:"https://ocw.mit.edu/courses/16-30-feedback-control-systems-fall-2010/",t:"Course"},{n:"Brian Douglas — Control Systems (YouTube, excellent)",url:"https://www.youtube.com/@BrianBDouglas",t:"Video"},{n:"NPTEL — Control Engineering",url:"https://nptel.ac.in/courses/107106081",t:"Course"}]},
+      { name:"Spacecraft Systems Design", hrs:"100–120 hrs",
+        subs:["Spacecraft subsystems overview (power, comms, ADCS, thermal, structure, C&DH)","Power system sizing (solar arrays, batteries)","Link budget & communications","Attitude Determination & Control (ADCS)","Thermal control (passive & active)","Mass & volume budget","CubeSat form factors & standards","Mission operations concepts"],
+        res:[{n:"MIT OCW 16.851 — Satellite Engineering",url:"https://ocw.mit.edu/courses/16-851-satellite-engineering-fall-2003/",t:"Course"},{n:"NASA Systems Engineering Handbook (free PDF)",url:"https://www.nasa.gov/connect/ebooks/nasa-systems-engineering-handbook",t:"Reference"},{n:"CubeSat Design Specification (Cal Poly — free)",url:"https://www.cubesat.org/",t:"Reference"}]},
+      { name:"Computational Fluid Dynamics (CFD) — Intro", hrs:"80–100 hrs",
+        subs:["Finite difference & finite volume methods","Discretization & stability criteria","Mesh generation concepts","OpenFOAM setup & tutorials","Post-processing CFD results (Paraview)","Validation & verification philosophy"],
+        res:[{n:"CFD Python: 12 Steps to Navier-Stokes (Lorena Barba)",url:"https://lorenabarba.com/blog/cfd-python-12-steps-to-navier-stokes/",t:"Course"},{n:"OpenFOAM — Free CFD software + tutorials",url:"https://www.openfoam.com/",t:"Tool"},{n:"NASA CFD Resources (Langley Research Center)",url:"https://www.nasa.gov/centers/langley/",t:"Reference"}]},
+      { name:"Aircraft & Spacecraft Conceptual Design", hrs:"100–120 hrs",
+        subs:["Conceptual design process (Roskam / Raymer method)","Constraint analysis & design space mapping","Weight estimation & sizing (class I & II)","Parametric trade studies","Design for manufacturing & certification (overview)","NASA systems engineering 'V' model","Preliminary Design Review (PDR) process"],
+        res:[{n:"MIT OCW 16.885J — Aircraft Systems Engineering",url:"https://ocw.mit.edu/courses/16-885j-aircraft-systems-engineering-fall-2005/",t:"Course"},{n:"OpenVSP (NASA) — Free 3D aircraft geometry tool",url:"https://openvsp.org/",t:"Tool"},{n:"AIAA Student Resources",url:"https://www.aiaa.org/students",t:"Community"}]},
+    ]},
+  { code:"PHASE 06", title:"Specialization & Projects", subtitle:"Apply, build, and showcase real engineering",
+    duration:"Ongoing", level:"Expert", color:"#b6964e", icon:"\u2604\uFE0E",
+    topics:[
+      { name:"Choose Your Specialization Track", hrs:"Self-directed",
+        subs:["Track A — Aeronautics: Aircraft design, aerodynamics, propulsion for atmospheric flight","Track B — Astronautics: Orbital mechanics, spacecraft systems, mission design","Track C — Propulsion Engineering: Rocket engines, hypersonics, electric propulsion","Track D — Avionics & GNC: Flight software, sensors, control systems, autonomy","Track E — Structural Engineering: Composites, FEA, fatigue analysis, aeroelasticity"],
+        res:[{n:"NASA Technical Reports Server — Thousands of free papers",url:"https://ntrs.nasa.gov/",t:"Reference"},{n:"arXiv — Aerospace & physics preprints",url:"https://arxiv.org/",t:"Reference"},{n:"AIAA Digital Library (student access)",url:"https://arc.aiaa.org/",t:"Community"}]},
+      { name:"Capstone Project Ideas", hrs:"200+ hrs",
+        subs:["Simulate an airfoil in XFOIL and validate against NACA wind tunnel data","Design a Mars transfer orbit using NASA GMAT and compute delta-V budget","Python simulation of full aircraft performance: range, endurance, climb envelope","Model a CubeSat mission: subsystem budget, orbit selection, link budget","Build and fly a model rocket (Estes or Tripoli certification)","CFD analysis of a simple airfoil using OpenFOAM","Design a conceptual aircraft using OpenVSP + XFOIL","Replicate a published Apollo trajectory from NASA technical reports"],
+        res:[{n:"XFOIL — Subsonic Airfoil Analysis (MIT)",url:"https://web.mit.edu/drela/Public/web/xfoil/",t:"Tool"},{n:"NASA GMAT — Mission Analysis Tool",url:"https://gmat.gsfc.nasa.gov/",t:"Tool"},{n:"OpenVSP — Vehicle Sketch Pad (NASA)",url:"https://openvsp.org/",t:"Tool"},{n:"Rocket Propulsion Analysis — RPA (free edition)",url:"http://www.propulsion-analysis.com/",t:"Tool"},{n:"OpenFOAM — CFD",url:"https://www.openfoam.com/",t:"Tool"}]},
+      { name:"Community & Networking", hrs:"Ongoing",
+        subs:["Join AIAA (American Institute of Aeronautics and Astronautics) student chapter","Participate in NASA Student Launch Initiative (SLI)","Compete in AIAA Design-Build-Fly (DBF)","Engage in r/aerospace and r/SpaceX for community discussions","Follow NASA, ESA, SpaceX public technical briefings","Contribute to open-source aerospace software (OpenVSP, GMAT, etc.)","Get Tripoli Rocketry Association Level 1 certification"],
+        res:[{n:"NASA Education — Student Opportunities",url:"https://www.nasa.gov/learning-resources/for-students/",t:"Community"},{n:"AIAA Student Events & Competitions",url:"https://www.aiaa.org/events-learning/student-events",t:"Community"},{n:"Tripoli Rocketry Association",url:"https://www.tripoli.org/",t:"Community"}]},
+    ]},
+];
+
+/* ============================ STATE + RENDER ============================ */
+let activePhase = 0;
+const open = {};
+const $ = (id) => document.getElementById(id);
+const esc = (s) => String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+
+function renderStats(){
+  $("stats").innerHTML = STATS.map(([v,l]) =>
+    `<div><div class="stat-v">${esc(v)}</div><div class="stat-l">${esc(l)}</div></div>`).join("");
+}
+
+function renderRoadmap(){
+  $("roadmap").innerHTML = PHASES.map((p,i)=>{
+    const active = activePhase===i;
+    const dot = `width:30px;height:30px;border-radius:50%;border:1px solid ${p.color};display:flex;align-items:center;justify-content:center;font-family:'Cormorant Garamond',serif;font-size:14px;font-weight:600;flex-shrink:0;cursor:pointer;background:${active?p.color+'26':'transparent'};color:${active?p.color:'#5a6684'};box-shadow:${active?`0 0 12px ${p.color}99`:'none'};transition:all .25s`;
+    const line = i<PHASES.length-1 ? `<div class="rline" style="background:${i<activePhase?PHASES[i].color:'rgba(227,194,126,0.18)'}"></div>` : "";
+    return `<div class="rnode"><div class="rdot" style="${dot}" title="${esc(p.title)}" onclick="setPhase(${i})">${i}</div>${line}</div>`;
+  }).join("");
+}
+
+function renderNav(){
+  $("pnav").innerHTML = PHASES.map((p,i)=>{
+    const active = activePhase===i;
+    const btn = `border:1px solid ${active?p.color:'rgba(227,194,126,0.16)'};background:${active?'rgba(12,16,33,0.66)':'rgba(12,16,33,0.4)'};box-shadow:${active?`0 0 18px ${p.color}33`:'none'}`;
+    const code = `color:${active?p.color:'#7e88a6'}`;
+    const nm = `color:${active?'#f3edda':'#8e98b4'}`;
+    const navName = p.icon + "  " + p.title.split(" ").slice(0,3).join(" ");
+    return `<button class="pbtn" style="${btn}" onclick="setPhase(${i})"><div class="pbtn-code" style="${code}">${esc(p.code)}</div><div class="pbtn-name" style="${nm}">${esc(navName)}</div></button>`;
+  }).join("");
+}
+
+function renderPhase(){
+  const cp = PHASES[activePhase];
+  const topics = cp.topics.map((tp,ti)=>{
+    const k = `${cp.code}-${ti}`;
+    const isOpen = open[k] ?? false;
+    const card = `border:1px solid rgba(227,194,126,0.16);border-left:${isOpen?`2px solid ${cp.color}`:'1px solid rgba(227,194,126,0.16)'};background:${isOpen?'rgba(12,16,33,0.66)':'rgba(12,16,33,0.5)'}`;
+    const nm = `color:${isOpen?cp.color:'#f3edda'}`;
+    const chev = `color:${isOpen?cp.color:'#5a6684'};transform:${isOpen?'rotate(180deg)':'none'}`;
+    let body = "";
+    if(isOpen){
+      const subs = tp.subs.map(s=>`<li class="sitem"><span class="arr">&rsaquo;</span>${esc(s)}</li>`).join("");
+      const res = tp.res.map(r=>{
+        const clr = TYPE_CLR[r.t] || "#9aa4be";
+        return `<a class="rlink" href="${esc(r.url)}" target="_blank" rel="noopener noreferrer"><span class="rtag" style="color:${clr};border:1px solid ${clr}">${esc(r.t)}</span><span class="rname">${esc(r.n)}</span><span class="rarr">&#8599;</span></a>`;
+      }).join("");
+      body = `<div class="tbody"><div class="slabel">Key Concepts</div><ul class="slist">${subs}</ul><div class="slabel">Free Resources</div><div class="rcol">${res}</div></div>`;
+    }
+    return `<div class="tcard" style="${card}"><div class="thead" onclick="toggleTopic('${k}')"><span class="tname" style="${nm}">${esc(tp.name)}</span><span class="thrs">${esc(tp.hrs)}</span><span class="tchev" style="${chev}">&#9662;</span></div>${body}</div>`;
+  }).join("");
+
+  $("phaseBody").innerHTML = `<div class="main"><div class="ph-top"><div>
+    <div class="ph-code" style="color:${cp.color}">${esc(cp.code)} &middot; ${esc(cp.duration)}</div>
+    <div class="ph-divbar" style="background:linear-gradient(90deg,${cp.color} 0%,transparent 100%)"></div>
+    <h2 class="ph-title">${esc(cp.icon + "  " + cp.title)}</h2>
+    <p class="ph-sub">${esc(cp.subtitle)}</p>
+    </div><div class="ph-badges">
+    <span class="badge" style="color:${cp.color};border:1px solid ${cp.color}">${esc(cp.duration)}</span>
+    <span class="badge" style="color:#8e98b4;border:1px solid rgba(227,194,126,0.18)">${esc(cp.level)}</span>
+    </div></div>${topics}</div>`;
+}
+
+function renderTools(){
+  $("tgrid").innerHTML = FREE_TOOLS.map(t=>
+    `<a class="tool" href="${esc(t.url)}" target="_blank" rel="noopener noreferrer"><div class="tool-n">${esc(t.n)}</div><div class="tool-d">${esc(t.d)}</div></a>`).join("");
+}
+
+window.setPhase = (i)=>{ activePhase=i; renderRoadmap(); renderNav(); renderPhase(); };
+window.toggleTopic = (k)=>{ open[k] = !(open[k] ?? false); renderPhase(); };
+
+/* ============================ STAR CANVAS ============================ */
+(function(){
+  const c = $("starCanvas"); const ctx = c.getContext("2d");
+  let stars=[], W=0, H=0, raf=0;
+  function setup(){
+    const dpr = window.devicePixelRatio || 1;
+    W = window.innerWidth; H = window.innerHeight;
+    c.width = W*dpr; c.height = H*dpr;
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    const count = Math.min(240, Math.max(120, Math.round((W*H)/9000)));
+    stars = Array.from({length:count}, ()=>({
+      x:Math.random()*W, y:Math.random()*H, r:0.3+Math.random()*1.4,
+      base:0.2+Math.random()*0.6, sp:0.4+Math.random()*1.6, ph:Math.random()*Math.PI*2,
+      gold:Math.random()<0.18,
+    }));
+  }
+  function render(t){
+    ctx.clearRect(0,0,W,H);
+    const time=(t||0)/1000;
+    for(const s of stars){
+      let a = s.base*(0.55+0.45*Math.sin(time*s.sp+s.ph));
+      a = Math.max(0, Math.min(1,a));
+      if(s.r>1.0){ ctx.beginPath(); ctx.fillStyle = s.gold?`rgba(227,194,126,${a*0.12})`:`rgba(214,224,245,${a*0.12})`; ctx.arc(s.x,s.y,s.r*2.4,0,6.2832); ctx.fill(); }
+      ctx.beginPath(); ctx.fillStyle = s.gold?`rgba(227,194,126,${a})`:`rgba(214,224,245,${a})`; ctx.arc(s.x,s.y,s.r,0,6.2832); ctx.fill();
+    }
+    raf = requestAnimationFrame(render);
+  }
+  const reduce = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  setup();
+  if(reduce){ render(0); cancelAnimationFrame(raf); }
+  else { raf = requestAnimationFrame(render); }
+  window.addEventListener("resize", ()=>{ cancelAnimationFrame(raf); setup(); if(reduce){render(0);cancelAnimationFrame(raf);} else {raf=requestAnimationFrame(render);} });
+})();
+
+/* ============================ INIT ============================ */
+renderStats(); renderRoadmap(); renderNav(); renderPhase(); renderTools();
+</script>
+</body>
+</html>
